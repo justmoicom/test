@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buy MTK Tokens</title>
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <!-- Utilisation d'une version plus ancienne de ethers.js pour plus de compatibilité -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@4.0.47/dist/ethers.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -20,7 +21,6 @@
       border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
-      margin: 5px;
     }
 
     button:hover {
@@ -31,67 +31,60 @@
       margin-top: 20px;
       font-size: 14px;
       color: #333;
-      max-width: 600px;
-      margin: 20px auto;
-      word-break: break-word;
-    }
-
-    .container {
-      padding: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Buy MTK Tokens</h1>
-    <p>Click the button below to buy tokens with TBNB.</p>
-    <button id="connectWalletButton">Connect Wallet</button>
-    <button id="buyTokensButton" style="display: none;">Buy Tokens (0.0001 TBNB)</button>
-    <div class="status" id="status">Status: Waiting for wallet connection...</div>
-  </div>
+  <h1>Buy MTK Tokens</h1>
+  <p>Click the button below to buy tokens with TBNB.</p>
+  <button id="connectWalletButton">Connect Wallet</button>
+  <button id="buyTokensButton" style="display: none;">Buy Tokens</button>
+  <div class="status" id="status">Status: Waiting for wallet connection...</div>
 
   <script>
-    // Configuration
     const contractAddress = "0x04a895233A60bA07F6642640c93C953B5Cac9491";
     const amountToSend = "0.0001"; // Amount in BNB
     const statusElement = document.getElementById("status");
     const connectWalletButton = document.getElementById("connectWalletButton");
     const buyTokensButton = document.getElementById("buyTokensButton");
 
-    // Contract ABI - Replace with your actual contract ABI
-    const contractABI = [
-      // Add your contract's ABI here
-      "function buyTokens() public payable",
-      "function getTokenAmount(uint256 bnbAmount) public view returns (uint256)"
-    ];
+    let provider, signer;
 
-    let provider, signer, contract;
-
-    // Connect to MetaMask
+    // Connect to MetaMask (older versions support)
     connectWalletButton.addEventListener("click", async () => {
       try {
-        if (!window.ethereum) {
-          statusElement.textContent = "Error: Please install MetaMask!";
+        console.log("Attempting to connect to MetaMask...");
+
+        // Vérifie si window.web3 existe (pour les anciennes versions de MetaMask)
+        if (typeof window.web3 === 'undefined') {
+          statusElement.textContent = "Status: MetaMask not detected!";
+          console.log("MetaMask not detected!");
           return;
         }
 
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        const accounts = await provider.send("eth_requestAccounts", []);
+        // Crée un provider avec web3 (pour les anciennes versions de MetaMask)
+        provider = new ethers.providers.Web3Provider(window.web3.currentProvider);
         
+        // Demande l'accès aux comptes (ancien format de MetaMask)
+        const accounts = await window.ethereum.enable(); // Utilisé dans les anciennes versions de MetaMask
+
         if (accounts.length === 0) {
-          statusElement.textContent = "Error: Please connect your wallet!";
+          statusElement.textContent = "Status: No accounts found!";
+          console.log("No accounts found in MetaMask.");
           return;
         }
 
         signer = provider.getSigner();
-        contract = new ethers.Contract(contractAddress, contractABI, signer);
-
         const userAddress = await signer.getAddress();
-        statusElement.textContent = `Connected: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+        
+        statusElement.textContent = `Status: Connected as ${userAddress}`;
+        console.log(`Connected as ${userAddress}`);
+        
         connectWalletButton.style.display = "none";
         buyTokensButton.style.display = "inline-block";
       } catch (error) {
-        handleError(error, "Connection failed");
+        console.error("Error connecting to MetaMask:", error);
+        statusElement.textContent = `Status: Connection failed - ${error.message}`;
       }
     });
 
@@ -99,36 +92,36 @@
     buyTokensButton.addEventListener("click", async () => {
       try {
         if (!signer) {
-          statusElement.textContent = "Error: Please connect your wallet first!";
+          statusElement.textContent = "Status: Please connect your wallet first!";
+          console.log("Wallet is not connected.");
           return;
         }
 
-        const parsedAmount = ethers.utils.parseEther(amountToSend);
-        statusElement.textContent = "Processing transaction...";
+        console.log("Sending transaction...");
 
-        // Execute contract method
-        const tx = await contract.buyTokens({
-          value: parsedAmount
+        // Estimer la limite de gaz avant d'envoyer la transaction
+        const gasLimit = await provider.estimateGas({
+          to: contractAddress,
+          value: ethers.utils.parseEther(amountToSend),
         });
 
-        statusElement.textContent = `Transaction sent: ${tx.hash}`;
-        
-        // Wait for confirmation
-        const receipt = await tx.wait();
-        statusElement.textContent = `Success! Tokens purchased in block ${receipt.blockNumber}`;
+        const tx = await signer.sendTransaction({
+          to: contractAddress,
+          value: ethers.utils.parseEther(amountToSend),
+          gasLimit: gasLimit, // Utiliser la limite de gaz estimée
+        });
+
+        statusElement.textContent = `Status: Transaction sent! Hash: ${tx.hash}`;
+        console.log(`Transaction sent! Hash: ${tx.hash}`);
+
+        await tx.wait();
+        statusElement.textContent = "Status: Tokens purchased successfully!";
+        console.log("Tokens purchased successfully!");
       } catch (error) {
-        handleError(error, "Transaction failed");
+        console.error("Transaction failed:", error);
+        statusElement.textContent = `Status: Transaction failed - ${error.message}`;
       }
     });
-
-    // Error handling
-    function handleError(error, context) {
-      console.error(error);
-      const message = error.code === 4001 
-        ? "User denied transaction" 
-        : error.message;
-      statusElement.textContent = `${context}: ${message}`;
-    }
   </script>
 </body>
 </html>
