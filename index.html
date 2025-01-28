@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy MTK Tokens</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .status {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #333;
+      max-width: 600px;
+      margin: 20px auto;
+      word-break: break-word;
+    }
+
+    .container {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Buy MTK Tokens</h1>
+    <p>Click the button below to buy tokens with TBNB.</p>
+    <button id="connectWalletButton">Connect Wallet</button>
+    <button id="buyTokensButton" style="display: none;">Buy Tokens (0.0001 TBNB)</button>
+    <div class="status" id="status">Status: Waiting for wallet connection...</div>
+  </div>
+
+  <script>
+    // Configuration
+    const contractAddress = "0x04a895233A60bA07F6642640c93C953B5Cac9491";
+    const amountToSend = "0.0001"; // Amount in BNB
+    const statusElement = document.getElementById("status");
+    const connectWalletButton = document.getElementById("connectWalletButton");
+    const buyTokensButton = document.getElementById("buyTokensButton");
+
+    // Contract ABI - Replace with your actual contract ABI
+    const contractABI = [
+      // Add your contract's ABI here
+      "function buyTokens() public payable",
+      "function getTokenAmount(uint256 bnbAmount) public view returns (uint256)"
+    ];
+
+    let provider, signer, contract;
+
+    // Connect to MetaMask
+    connectWalletButton.addEventListener("click", async () => {
+      try {
+        if (!window.ethereum) {
+          statusElement.textContent = "Error: Please install MetaMask!";
+          return;
+        }
+
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        
+        if (accounts.length === 0) {
+          statusElement.textContent = "Error: Please connect your wallet!";
+          return;
+        }
+
+        signer = provider.getSigner();
+        contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+        const userAddress = await signer.getAddress();
+        statusElement.textContent = `Connected: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+        connectWalletButton.style.display = "none";
+        buyTokensButton.style.display = "inline-block";
+      } catch (error) {
+        handleError(error, "Connection failed");
+      }
+    });
+
+    // Buy tokens
+    buyTokensButton.addEventListener("click", async () => {
+      try {
+        if (!signer) {
+          statusElement.textContent = "Error: Please connect your wallet first!";
+          return;
+        }
+
+        const parsedAmount = ethers.utils.parseEther(amountToSend);
+        statusElement.textContent = "Processing transaction...";
+
+        // Execute contract method
+        const tx = await contract.buyTokens({
+          value: parsedAmount
+        });
+
+        statusElement.textContent = `Transaction sent: ${tx.hash}`;
+        
+        // Wait for confirmation
+        const receipt = await tx.wait();
+        statusElement.textContent = `Success! Tokens purchased in block ${receipt.blockNumber}`;
+      } catch (error) {
+        handleError(error, "Transaction failed");
+      }
+    });
+
+    // Error handling
+    function handleError(error, context) {
+      console.error(error);
+      const message = error.code === 4001 
+        ? "User denied transaction" 
+        : error.message;
+      statusElement.textContent = `${context}: ${message}`;
+    }
+  </script>
+</body>
+</html>
